@@ -5,14 +5,16 @@
 #include <vector>  
 /*include the header file for function and structure declerations*/
 #include "point_search.h"
+/* inlcude algorithm for sorting*/
+#include <algorithm>
 
 /* For min heap algorihtm, I have used https://johnderinger.wordpress.com/2012/12/28/heapify/ and https://www.geeksforgeeks.org/binary-heap/ as a reference */
 	
 
-/*Store all the values unsorted into the vector in O(n), where n is total number of elements in the input*/
+/* Store all the values unsorted into the vector in O(n), where n is total number of elements in the input*/
 __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Point* points_end){
 		SearchContext* temp = new SearchContext;
-		temp->count = 1;
+		temp->count = 0;
 		auto it = points_begin; //create a temp variable for going through the container(as an iterator)
 		while (it != points_end) {
 			(temp->count)++;
@@ -28,105 +30,50 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 		}
 		return temp;
 	}
-	Point* Minim_Heap::extract_min() {
-		if (heap.size() > 0) {
-			Point* extracted = new Point;
-			*extracted = heap[0];
-			heap[0] = heap[heap.size() - 1];
-			heap.pop_back();
-			min_heapify(0, heap.size() - 1);
-			return extracted;
+
+	int check(Point* arr,Point temp,int size) {
+		int big = arr[0].rank; int big_in = 0; int changed = 0;
+		for (int i = 0; i < size; ++i) {
+			if (arr[i].rank > temp.rank && big < arr[i].rank) {
+				big = arr[i].rank;
+				big_in = i;
+				changed = 1;
+			}
 		}
+		if (changed == 1 || arr[0].rank > temp.rank)
+			return big_in;
 		else
-			return NULL;
+			return -1;
 	}
-	void Minim_Heap::create() {
-		// last non-leaf node index
-		int end = heap.size() - 1;
-		int index = (end / 2) - 1;
-
-		// heapify from the first non-leaf node to the root to create the heap
-		for (int i = index; i >= 0; --i) {
-			min_heapify(i, end);
-		}
+	bool compare(Point A, Point B) {
+		return (A.rank < B.rank);
 	}
-	void Minim_Heap::insert(Point temp) { heap.push_back(temp);  }
-	void Minim_Heap::swap(Point* X, Point* Y) {
-		Point temp = *X;
-		*Y = *X;
-		*X = temp;
-	}
-	void Minim_Heap::min_heapify(int id, int end) {
-		int beg = id;
-		int child_id = 2 * beg + 1;
-		while (child_id <= end) {
-			if (child_id + 1 <= end && heap[child_id].rank < heap[child_id + 1].rank) {
-				++child_id;
-			}
-
-			if (heap[beg].rank < heap[child_id].rank) {
-				swap(&(heap[beg]), &(heap[child_id]));
-				beg = child_id;
-				child_id = 2 * beg + 1;
-			}
-			else {
-				return;
-			}
-		}
-
-	}
-	int32_t Minim_Heap::test(int index){
-		return (heap[index]).rank;
-	}
-	Minim_Heap::Minim_Heap(int size) {
-		heap.reserve(size); //the alternative could be reserving memory after determining the # of points in Rect, but it would cost us another O(N)
-	}
-	void Minim_Heap::clean() {
-		heap.clear();
-	}
-	int Minim_Heap::sizeof_heap() {
-		return heap.size();
-	}
-	bool Minim_Heap::isFull() {
-		if (heap.size() == capacity) {
-			return true;
-		}
-		else
-			return false;
-	}
-	void Minim_Heap::set_capacity() {
-
-	}
-	int check(Point* temp) {
-
-	}
-
 	__declspec(dllexport) int32_t  search(SearchContext* sc, const Rect rect, const int32_t count, Point* out_points)
 	{
 
 		/* 1st -  Search through the sc -> arr to determine all the points which are within the rect range in O(n) */
 		
-		//Minim_Heap* hp = new Minim_Heap(count); // create the heap size of "count" numbers
 		Point* temp_arr = (Point*)malloc(sizeof(Point)*count);
 		int ct = 1;
 		Point* it = sc->arr;
-		int index;
-		while (ct != (sc->count))
+		int index; int t = 0;
+		while (ct <= (sc->count))
 		{
-			//std::cout << " ct:: " << ct << std::endl;
 			if (it->x >= rect.lx && it->x <= rect.hx && it->y >= rect.ly && it->y <= rect.hy) {
-				//hp -> insert(*it);
-				if (ct != count) {
-					temp_arr[ct - 1] = *it;
+				if (t != count) {
+					temp_arr[t++] = *it;
 				}
 				else {
-					index = check(it);
+					index = check(temp_arr,*it,count);
 					if (index != -1)
 						temp_arr[index] = *it;
 				}
+				
 			}
 			++ct;
 		}
+		std::sort(temp_arr, temp_arr + count,compare);
+		
 		/*std::cout << "\nMIN POINT #0: " << hp->test(0) << std::endl;
 		std::cout << "MIN POINT #1: " << hp->test(1) << std::endl;
 		std::cout << "MIN POINT #2: " << hp->test(2) << std::endl;
@@ -135,7 +82,11 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 		std::cout << "MIN POINT #5: " << hp->test(5) << std::endl;
 		std::cout << "MIN POINT #6: " << hp->test(6) << std::endl;
 		std::cout << "MIN POINT #7: " << hp->test(7) << std::endl;*/
-
+		int i;
+		for (i = 0; i < count; ++i) {
+			out_points[i] = temp_arr[i];
+			free(temp_arr + i);
+		}
 		/*hp->create();
 		/* 3rd -  extract "count" numbers from the heap in O(N) 
 		Point* ex; // extracted point
@@ -150,20 +101,16 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 		}
 	*/
 		
-		return j;
+		return i;
 	}
 
 	__declspec(dllexport) SearchContext*  destroy(SearchContext* sc)
 	{
 		auto temp = sc->arr;
 		for(int i = 1; i <= sc->count; ++i){
-			free(temp);
-			++temp;
+			free(temp++);
 		}
-	
-		if (sc->arr == NULL) {
-			delete sc;
-		}
+		delete sc;
 		if (sc == NULL) {
 			return nullptr;
 		}

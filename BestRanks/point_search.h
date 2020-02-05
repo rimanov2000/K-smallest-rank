@@ -40,8 +40,10 @@ implements this interface. */
 		int count;
 	}SearchContext;
 
+	int check(Point* arr, Point temp, int size);
+	bool compare(Point A, Point B);
 	/* Declaration of the Minim_Heap class that is used for extraction of "count" points*/
-	class Minim_Heap
+	/*class Minim_Heap
 	{
 	private:
 		std::vector <Point> heap;
@@ -56,7 +58,7 @@ implements this interface. */
 		void clean(); // deallocates memory for heap vector
 		Minim_Heap(int size);
 		bool isFull(); // whether the heap full or not
-		void set_capacity(); // set the max size for the heap
+		void set_capacity(int cap); // set the max size for the heap
 
 		// Helper functions for debugging
 		int32_t test(int index);
@@ -65,7 +67,7 @@ implements this interface. */
 
 	};
 
-
+	*/
 	/* Load the provided points into an internal data structure. The pointers follow the STL iterator convention, where
 	"points_begin" points to the first element, and "points_end" points to one past the last element. The input points are
 	only guaranteed to be valid for the duration of the call. Return a pointer to the context that can be used for
