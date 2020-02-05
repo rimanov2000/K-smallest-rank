@@ -1,0 +1,8 @@
+--- Churchill Navigation Point Search Challenge ---
+Point count  : 10000000
+Query count  : 1
+Result count : 20
+Random seed  : 642E3E98-6EA650C8-642E3E98-7E75161E-4FE6D148
+
+Loading algorithms:
+No algorithms loaded.
