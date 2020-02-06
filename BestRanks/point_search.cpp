@@ -32,15 +32,15 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 	}
 
 	int check(Point* arr,Point temp,int size) {
-		int big = arr[0].rank; int big_in = 0; int changed = 0;
+		int big = arr[0].rank; int big_in = 0; bool changed = false;
 		for (int i = 0; i < size; ++i) {
 			if (arr[i].rank > temp.rank && big < arr[i].rank) {
 				big = arr[i].rank;
 				big_in = i;
-				changed = 1;
+				changed = true;
 			}
 		}
-		if (changed == 1 || arr[0].rank > temp.rank)
+		if (changed == true || arr[0].rank > temp.rank)
 			return big_in;
 		else
 			return -1;
@@ -65,8 +65,9 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 				}
 				else {
 					index = check(temp_arr,*it,count);
-					if (index != -1)
+					if (index != -1) {
 						temp_arr[index] = *it;
+					}
 				}
 				
 			}
@@ -74,32 +75,12 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 		}
 		std::sort(temp_arr, temp_arr + count,compare);
 		
-		/*std::cout << "\nMIN POINT #0: " << hp->test(0) << std::endl;
-		std::cout << "MIN POINT #1: " << hp->test(1) << std::endl;
-		std::cout << "MIN POINT #2: " << hp->test(2) << std::endl;
-		std::cout << "MIN POINT #3: " << hp->test(3) << std::endl;
-		std::cout << "MIN POINT #4: " << hp->test(4) << std::endl;
-		std::cout << "MIN POINT #5: " << hp->test(5) << std::endl;
-		std::cout << "MIN POINT #6: " << hp->test(6) << std::endl;
-		std::cout << "MIN POINT #7: " << hp->test(7) << std::endl;*/
 		int i;
 		for (i = 0; i < count; ++i) {
 			out_points[i] = temp_arr[i];
 			free(temp_arr + i);
 		}
-		/*hp->create();
-		/* 3rd -  extract "count" numbers from the heap in O(N) 
-		Point* ex; // extracted point
-		int32_t j = 0; // counter for number of points extracted
-		for (int i = 1; i <= count; ++i) {
-			ex = hp->extract_min();
-			if (ex != NULL) {
-				out_points[j] = *ex;
-				++j;
-				delete ex;
-			}
-		}
-	*/
+		
 		
 		return i;
 	}
