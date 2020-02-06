@@ -127,14 +127,7 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 			}
 			++ct;
 		}
-		/*std::cout << "\nMIN POINT #0: " << hp->test(0) << std::endl;
-		std::cout << "MIN POINT #1: " << hp->test(1) << std::endl;
-		std::cout << "MIN POINT #2: " << hp->test(2) << std::endl;
-		std::cout << "MIN POINT #3: " << hp->test(3) << std::endl;
-		std::cout << "MIN POINT #4: " << hp->test(4) << std::endl;
-		std::cout << "MIN POINT #5: " << hp->test(5) << std::endl;
-		std::cout << "MIN POINT #6: " << hp->test(6) << std::endl;
-		std::cout << "MIN POINT #7: " << hp->test(7) << std::endl;*/
+		
 
 		/*hp->create();
 		/* 3rd -  extract "count" numbers from the heap in O(N) 
