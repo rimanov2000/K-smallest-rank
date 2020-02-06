@@ -40,30 +40,9 @@ implements this interface. */
 		int count;
 	}SearchContext;
 
-	/* Declaration of the Minim_Heap class that is used for extraction of "count" points*/
-	class Minim_Heap
-	{
-	private:
-		std::vector <Point> heap;
-		int capacity;
-	public:
-		
-		Point* extract_min(); // get the lowest element in the heap
-		void min_heapify(int id, int end); // heapify down 
-		void insert(Point temp); //insert without heapifying
-		void create(); //create the heap
-		void swap(Point* X, Point* Y);
-		void clean(); // deallocates memory for heap vector
-		Minim_Heap(int size);
-		bool isFull(); // whether the heap full or not
-		void set_capacity(); // set the max size for the heap
+	int check(Point* arr, Point temp, int size);
+	bool compare(Point A, Point B);
 
-		// Helper functions for debugging
-		int32_t test(int index);
-		int sizeof_heap(); 
-
-
-	};
 
 
 	/* Load the provided points into an internal data structure. The pointers follow the STL iterator convention, where
