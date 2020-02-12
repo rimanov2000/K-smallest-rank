@@ -35,13 +35,13 @@ implements this interface. */
 	/* Declaration of the struct that is used as the context for the calls. */
 	typedef struct
 	{
-		//std::vector<Point> arr; //vector of Points 
-		Point* arr;
+		std::vector<Point> arr; //vector of Points 
 		int count;
 	}SearchContext;
+	bool compare(Point A, Point B);
 
 
-	/* Declaration of the Minim_Heap class that is used for extraction of "count" points*/
+	/* Declaration of the Minim_Heap class that is used for extraction of "count" points
 	class Minim_Heap
 	{
 	private:
@@ -66,7 +66,7 @@ implements this interface. */
 
 	};
 
-	
+	*/
 	/* Load the provided points into an internal data structure. The pointers follow the STL iterator convention, where
 	"points_begin" points to the first element, and "points_end" points to one past the last element. The input points are
 	only guaranteed to be valid for the duration of the call. Return a pointer to the context that can be used for

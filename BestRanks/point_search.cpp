@@ -18,68 +18,37 @@ __declspec(dllexport) SearchContext*  create(const Point* points_begin, const Po
 		auto it = points_begin; //create a temp variable for going through the container(as an iterator)
 		while (it != points_end) {
 			(temp->count)++;
+			(temp->arr).push_back(*it);
 			++it; //iterate the counter 
 		}
-		temp->arr = new Point[temp->count];
-		it = points_begin;
-		int count = 0;
-		while (it != points_end) {
-			(temp->arr)[count] = *it;
-			++it; //iterate the pointer 
-			++count; //iterate the counter
-		}
-		std::sort(temp->arr, temp->arr + count, compare);
+		std::sort((temp->arr).begin(), (temp->arr).end(), compare);
 		return temp;
 	}
 
-	int check(Point* arr,Point temp,int size) {
-		int big = arr[0].rank; int big_in = 0; bool changed = false;
-		for (int i = 0; i < size; ++i) {
-			if (arr[i].rank > temp.rank && big < arr[i].rank) {
-				big = arr[i].rank;
-				big_in = i;
-				changed = true;
-			}
-		}
-		if (changed == true || arr[0].rank > temp.rank)
-			return big_in;
-		else
-			return -1;
-	}
 	bool compare(Point A, Point B) {
 		return (A.rank < B.rank);
 	}
 	__declspec(dllexport) int32_t  search(SearchContext* sc, const Rect rect, const int32_t count, Point* out_points)
 	{
-
-		/* 1st -  Search through the sc -> arr to determine all the points which are within the rect range in O(n) */
-
-		int ct = 1;
-		Point* it = sc->arr;
-		int index; int t = 0;
-		while (ct <= (sc->count))
+		int t = 0;
+		for(auto it = (sc->arr).begin();it != (sc->arr).end();++it)
 		{
 			if (it->x >= rect.lx && it->x <= rect.hx && it->y >= rect.ly && it->y <= rect.hy) {
-				if (t != count) {
-					out_points[t] = *it;
-					++t;
-				}
-				else {
+				out_points[t] = *it;
+				++t;
+				if (t == count) {
 					break;
 				}
 			}
-			++ct;
-			++it;
+
 		}
-		
 		return t;
 	}
 
 	__declspec(dllexport) SearchContext*  destroy(SearchContext* sc)
 	{
 
-		auto temp = sc->arr;
-		delete[] temp;
+		(sc->arr).clear();
 		delete sc;
-	return nullptr;
+		return nullptr;
 	}
